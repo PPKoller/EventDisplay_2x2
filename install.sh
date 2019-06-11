@@ -4,7 +4,7 @@ mkdir ParaView
 mkdir ParaView/ParaView-5.4.1
 mkdir ParaView/Source
 
-wget 'http://argoncube.x10host.com/ParaView-5.4.1-Qt5-OpenGL2-MPI-Linux-64bit.tar.gz' -P ParaView/Source
+wget 'https://campuscloud.unibe.ch:443/ssf/s/readFile/share/29935/1590703954912896853/publicLink/ParaView-5.4.1-Qt5-OpenGL2-MPI-Linux-64bit.tar.gz' -P ParaView/Source
 
 tar -xzvf ParaView/Source/ParaView-5.4.1*.gz --strip 1 -C ParaView/ParaView-5.4.1
 
