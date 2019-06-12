@@ -16,14 +16,11 @@ from paraview.simple import *
 parser = argparse.ArgumentParser()
 parser.add_argument("root_file")
 parser.add_argument("-a", "--animation",    action='store_true',    help="See a 360 deg orbit animation.")
-parser.add_argument("-c", "--color",        default="dq",           help="Select the tree entry to use as color. Default: %(default)s")
-parser.add_argument("-l", "--logscale",     action='store_true',    help="Show logarithmic scaled colorbar")
-parser.add_argument("-m", "--module",       default="0",            help="Select the module (1-20). Default: %(default)s",                      type=int)
-parser.add_argument("-e", "--event",        default="0",            help="Select the event number. Default: %(default)s",                       type=int)
-parser.add_argument("-s", "--shower",       default="-1",           help="Select the shower number. Default: %(default)s",                      type=int)
-parser.add_argument("-t", "--threshold",    default="0.1E-3",       help="Kinetic energy threshold of tracks (GeV). Default: %(default)s GeV",  type=float)
-parser.add_argument("-ND","--NearDetector", action='store_true',    help="Show DUNE-ND shape")
-parser.add_argument("-FD","--FarDetector",  action='store_true',    help="Show DUNE-FD shape")
+parser.add_argument("-c", "--color",        default="dq",           help="Select the tree entry to use as color. Default: %(default)s.")
+parser.add_argument("-l", "--logscale",     action='store_true',    help="Show logarithmic scaled colorbar.")
+parser.add_argument("-e", "--event",        default="0",            help="Select the event number. Default: %(default)s.",                       type=int)
+parser.add_argument("-ND","--NearDetector", action='store_true',    help="Show DUNE-ND shape.")
+parser.add_argument("-FD","--FarDetector",  action='store_true',    help="Show DUNE-FD shape.")
 args = parser.parse_args()
 
 if args.NearDetector:
@@ -46,24 +43,16 @@ try:
     tree.SetBranchStatus("*", 1)
 
     for i in range(tree.GetEntries()):
+
         tree.GetEntry(i)
+
         if tree.ev != args.event:
             continue
-        #if tree.showerID != args.shower:
-        #    continue
-        if args.module==0:
-            if "q" in args.color:
-                data =  np.append(data,np.transpose(np.vstack((tree.xq, tree.yq, tree.zq, getattr(tree, args.color)))))
-            else:
-                data =  np.append(data,np.transpose(np.vstack((tree.xq, tree.yq, tree.zq, np.full(tree.nq, getattr(tree, args.color))))))
+
+        if "q" in args.color:
+            data =  np.append(data,np.transpose(np.vstack((tree.xq, tree.yq, tree.zq, getattr(tree, args.color)))))
         else:
-            for j in range(tree.nq):
-                if (tree.modq[j]!=2*args.module-2) and (tree.modq[j]!=2*args.module-1):
-                    continue
-                if "q" in args.color:
-                    data =  np.append(data,np.transpose(np.vstack((tree.xq[j], tree.yq[j], tree.zq[j], getattr(tree, args.color)[j]))))
-                else:
-                    data =  np.append(data,np.transpose(np.vstack((tree.xq[j], tree.yq[j], tree.zq[j], getattr(tree, args.color)))))
+            data =  np.append(data,np.transpose(np.vstack((tree.xq, tree.yq, tree.zq, np.full(tree.nq, getattr(tree, args.color))))))
 
     data = np.reshape(data,(-1,4))
 
@@ -157,10 +146,7 @@ renderView1.Background = [0.4, 0.4, 0.4]
 #========================
 cube = []
 
-if args.module==0:
-    modules = range(4)
-else:
-    modules = range(int(args.module-1.),int(args.module))
+modules = range(4)
 
 for i in modules:
     # create a new 'Box'
@@ -200,10 +186,7 @@ for i in modules:
 
 # Draw ArgonCube TPCs
 #=====================
-if args.module==0:
-    modules = range(8)
-else:
-    modules = range(int(args.module-1.),int(args.module))
+modules = range(8)
 
 for i in modules:
     # create a new 'Box'
@@ -485,7 +468,7 @@ if draw_ND:
     cube[-1].XLength = 700.0
     cube[-1].YLength = 500.0
     cube[-1].ZLength = 300.0
-    cube[-1].Center = [0., 250., 0.]
+    cube[-1].Center = [0., 250.-70., 0.]
 
     # show data in view
     acubeDisplay = Show(cube[-1], renderView1)
@@ -524,7 +507,7 @@ if draw_FD:
     cube[-1].XLength = 1400.0
     cube[-1].YLength = 6200.0
     cube[-1].ZLength = 1400.0
-    cube[-1].Center = [-1550., 3100., 0.]
+    cube[-1].Center = [-1550., 3100.-70., 0.]
 
     # show data in view
     acubeDisplay = Show(cube[-1], renderView1)
@@ -558,7 +541,7 @@ if draw_FD:
     cube[-1].XLength = 1400.0
     cube[-1].YLength = 6200.0
     cube[-1].ZLength = 1400.0
-    cube[-1].Center = [1550., 3100., 0.]
+    cube[-1].Center = [1550., 3100.-70., 0.]
 
     # show data in view
     acubeDisplay = Show(cube[-1], renderView1)
